@@ -1,6 +1,6 @@
 #pragma once
 
-namespace KamaCache
+namespace Cache
 {
 
 template <typename Key, typename Value>
@@ -19,4 +19,4 @@ public:
 
 };
 
-} // namespace KamaCache
+} // namespace Cache

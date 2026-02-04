@@ -9,7 +9,7 @@
 
 #include "KICachePolicy.h"
 
-namespace KamaCache
+namespace Cache
 {
 
 template<typename Key, typename Value> class KLfuCache;
@@ -375,5 +375,5 @@ private:
     std::vector<std::unique_ptr<KLfuCache<Key, Value>>> lfuSliceCaches_; // 缓存lfu分片容器
 };
 
-} // namespace KamaCache
+} // namespace Cache
 

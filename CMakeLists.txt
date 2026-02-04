@@ -19,3 +19,8 @@ set_target_properties(main PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 
 # 额外的编译选项（可根据需要启用）
 # target_compile_options(main PRIVATE -Wall -Wextra -O2)
+
+# 设置编译器使用 UTF-8 编码
+if(MSVC)
+    target_compile_options(main PRIVATE /utf-8)
+endif()

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace KamaCache 
+namespace Cache 
 {
 
 template<typename Key, typename Value>
@@ -38,4 +38,4 @@ public:
     template<typename K, typename V> friend class ArcLfuPart;
 };
 
-} // namespace KamaCache
+} // namespace Cache

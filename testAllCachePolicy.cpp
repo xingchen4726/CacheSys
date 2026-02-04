@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <random>
 #include <algorithm>
+#include <array>
 
 #include "KICachePolicy.h"
 #include "KLfuCache.h"
@@ -61,21 +62,21 @@ void testHotDataAccess() {
     const int HOT_KEYS = 20;         // 热点数据数量
     const int COLD_KEYS = 5000;      // 冷数据数量
     
-    KamaCache::KLruCache<int, std::string> lru(CAPACITY);
-    KamaCache::KLfuCache<int, std::string> lfu(CAPACITY);
-    KamaCache::KArcCache<int, std::string> arc(CAPACITY);
+    Cache::KLruCache<int, std::string> lru(CAPACITY);
+    Cache::KLfuCache<int, std::string> lfu(CAPACITY);
+    Cache::KArcCache<int, std::string> arc(CAPACITY);
     // 为LRU-K设置合适的参数：
     // - 主缓存容量与其他算法相同
     // - 历史记录容量设为可能访问的所有键数量
     // - k=2表示数据被访问2次后才会进入缓存，适合区分热点和冷数据
-    KamaCache::KLruKCache<int, std::string> lruk(CAPACITY, HOT_KEYS + COLD_KEYS, 2);
-    KamaCache::KLfuCache<int, std::string> lfuAging(CAPACITY, 20000);
+    Cache::KLruKCache<int, std::string> lruk(CAPACITY, HOT_KEYS + COLD_KEYS, 2);
+    Cache::KLfuCache<int, std::string> lfuAging(CAPACITY, 20000);
 
     std::random_device rd;
     std::mt19937 gen(rd());
     
     // 基类指针指向派生类对象，添加LFU-Aging
-    std::array<KamaCache::KICachePolicy<int, std::string>*, 5> caches = {&lru, &lfu, &arc, &lruk, &lfuAging};
+    std::array<Cache::KICachePolicy<int, std::string>*, 5> caches = {&lru, &lfu, &arc, &lruk, &lfuAging};
     std::vector<int> hits(5, 0);
     std::vector<int> get_operations(5, 0);
     std::vector<std::string> names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging"};
@@ -128,16 +129,16 @@ void testLoopPattern() {
     const int LOOP_SIZE = 500;        // 循环范围大小
     const int OPERATIONS = 200000;    // 总操作次数
     
-    KamaCache::KLruCache<int, std::string> lru(CAPACITY);
-    KamaCache::KLfuCache<int, std::string> lfu(CAPACITY);
-    KamaCache::KArcCache<int, std::string> arc(CAPACITY);
+    Cache::KLruCache<int, std::string> lru(CAPACITY);
+    Cache::KLfuCache<int, std::string> lfu(CAPACITY);
+    Cache::KArcCache<int, std::string> arc(CAPACITY);
     // 为LRU-K设置合适的参数：
     // - 历史记录容量设为总循环大小的两倍，覆盖范围内和范围外的数据
     // - k=2，对于循环访问，这是一个合理的阈值
-    KamaCache::KLruKCache<int, std::string> lruk(CAPACITY, LOOP_SIZE * 2, 2);
-    KamaCache::KLfuCache<int, std::string> lfuAging(CAPACITY, 3000);
+    Cache::KLruKCache<int, std::string> lruk(CAPACITY, LOOP_SIZE * 2, 2);
+    Cache::KLfuCache<int, std::string> lfuAging(CAPACITY, 3000);
 
-    std::array<KamaCache::KICachePolicy<int, std::string>*, 5> caches = {&lru, &lfu, &arc, &lruk, &lfuAging};
+    std::array<Cache::KICachePolicy<int, std::string>*, 5> caches = {&lru, &lfu, &arc, &lruk, &lfuAging};
     std::vector<int> hits(5, 0);
     std::vector<int> get_operations(5, 0);
     std::vector<std::string> names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging"};
@@ -197,15 +198,15 @@ void testWorkloadShift() {
     const int OPERATIONS = 80000;       // 总操作次数
     const int PHASE_LENGTH = OPERATIONS / 5;  // 每个阶段的长度
     
-    KamaCache::KLruCache<int, std::string> lru(CAPACITY);
-    KamaCache::KLfuCache<int, std::string> lfu(CAPACITY);
-    KamaCache::KArcCache<int, std::string> arc(CAPACITY);
-    KamaCache::KLruKCache<int, std::string> lruk(CAPACITY, 500, 2);
-    KamaCache::KLfuCache<int, std::string> lfuAging(CAPACITY, 10000);
+    Cache::KLruCache<int, std::string> lru(CAPACITY);
+    Cache::KLfuCache<int, std::string> lfu(CAPACITY);
+    Cache::KArcCache<int, std::string> arc(CAPACITY);
+    Cache::KLruKCache<int, std::string> lruk(CAPACITY, 500, 2);
+    Cache::KLfuCache<int, std::string> lfuAging(CAPACITY, 10000);
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::array<KamaCache::KICachePolicy<int, std::string>*, 5> caches = {&lru, &lfu, &arc, &lruk, &lfuAging};
+    std::array<Cache::KICachePolicy<int, std::string>*, 5> caches = {&lru, &lfu, &arc, &lruk, &lfuAging};
     std::vector<int> hits(5, 0);
     std::vector<int> get_operations(5, 0);
     std::vector<std::string> names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging"};

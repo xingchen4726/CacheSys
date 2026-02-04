@@ -8,7 +8,7 @@
 
 #include "KICachePolicy.h"
 
-namespace KamaCache
+namespace Cache
 {
 
 // 前向声明
@@ -323,4 +323,4 @@ private:
     std::vector<std::unique_ptr<KLruCache<Key, Value>>> lruSliceCaches_; // 切片LRU缓存
 };
 
-} // namespace KamaCache
+} // namespace Cache

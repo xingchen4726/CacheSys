@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <mutex>
 
-namespace KamaCache 
+namespace Cache 
 {
 
 template<typename Key, typename Value>
@@ -219,4 +219,4 @@ private:
     NodePtr ghostTail_;
 };
 
-} // namespace KamaCache
+} // namespace Cache

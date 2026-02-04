@@ -5,7 +5,7 @@
 #include "KArcLfuPart.h"
 #include <memory>
 
-namespace KamaCache 
+namespace Cache 
 {
 
 template<typename Key, typename Value>
@@ -89,4 +89,4 @@ private:
     std::unique_ptr<ArcLfuPart<Key, Value>> lfuPart_;
 };
 
-} // namespace KamaCache
+} // namespace Cache
