@@ -10,6 +10,7 @@
 #include "KICachePolicy.h"
 #include "KLfuCache.h"
 #include "KLruCache.h"
+#include "KFifoCache.h"
 #include "KArcCache/KArcCache.h"
 
 class Timer {
@@ -40,6 +41,8 @@ void printResults(const std::string& testName, int capacity,
         names = {"LRU", "LFU", "ARC", "LRU-K"};
     } else if (hits.size() == 5) {
         names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging"};
+    } else if (hits.size() == 6) {
+        names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging", "FIFO"};
     }
     
     for (size_t i = 0; i < hits.size(); ++i) {
@@ -71,15 +74,16 @@ void testHotDataAccess() {
     // - k=2表示数据被访问2次后才会进入缓存，适合区分热点和冷数据
     Cache::KLruKCache<int, std::string> lruk(CAPACITY, HOT_KEYS + COLD_KEYS, 2);
     Cache::KLfuCache<int, std::string> lfuAging(CAPACITY, 20000);
+    Cache::KFifoCache<int, std::string> fifo(CAPACITY);
 
     std::random_device rd;
     std::mt19937 gen(rd());
     
-    // 基类指针指向派生类对象，添加LFU-Aging
-    std::array<Cache::KICachePolicy<int, std::string>*, 5> caches = {&lru, &lfu, &arc, &lruk, &lfuAging};
-    std::vector<int> hits(5, 0);
-    std::vector<int> get_operations(5, 0);
-    std::vector<std::string> names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging"};
+    // 基类指针指向派生类对象，添加LFU-Aging和FIFO
+    std::array<Cache::KICachePolicy<int, std::string>*, 6> caches = {&lru, &lfu, &arc, &lruk, &lfuAging, &fifo};
+    std::vector<int> hits(6, 0);
+    std::vector<int> get_operations(6, 0);
+    std::vector<std::string> names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging", "FIFO"};
 
     // 为所有的缓存对象进行相同的操作序列测试
     for (int i = 0; i < caches.size(); ++i) {
@@ -137,11 +141,12 @@ void testLoopPattern() {
     // - k=2，对于循环访问，这是一个合理的阈值
     Cache::KLruKCache<int, std::string> lruk(CAPACITY, LOOP_SIZE * 2, 2);
     Cache::KLfuCache<int, std::string> lfuAging(CAPACITY, 3000);
+    Cache::KFifoCache<int, std::string> fifo(CAPACITY);
 
-    std::array<Cache::KICachePolicy<int, std::string>*, 5> caches = {&lru, &lfu, &arc, &lruk, &lfuAging};
-    std::vector<int> hits(5, 0);
-    std::vector<int> get_operations(5, 0);
-    std::vector<std::string> names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging"};
+    std::array<Cache::KICachePolicy<int, std::string>*, 6> caches = {&lru, &lfu, &arc, &lruk, &lfuAging, &fifo};
+    std::vector<int> hits(6, 0);
+    std::vector<int> get_operations(6, 0);
+    std::vector<std::string> names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging", "FIFO"};
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -203,13 +208,14 @@ void testWorkloadShift() {
     Cache::KArcCache<int, std::string> arc(CAPACITY);
     Cache::KLruKCache<int, std::string> lruk(CAPACITY, 500, 2);
     Cache::KLfuCache<int, std::string> lfuAging(CAPACITY, 10000);
+    Cache::KFifoCache<int, std::string> fifo(CAPACITY);
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::array<Cache::KICachePolicy<int, std::string>*, 5> caches = {&lru, &lfu, &arc, &lruk, &lfuAging};
-    std::vector<int> hits(5, 0);
-    std::vector<int> get_operations(5, 0);
-    std::vector<std::string> names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging"};
+    std::array<Cache::KICachePolicy<int, std::string>*, 6> caches = {&lru, &lfu, &arc, &lruk, &lfuAging, &fifo};
+    std::vector<int> hits(6, 0);
+    std::vector<int> get_operations(6, 0);
+    std::vector<std::string> names = {"LRU", "LFU", "ARC", "LRU-K", "LFU-Aging", "FIFO"};
 
     // 为每种缓存算法运行相同的测试
     for (int i = 0; i < caches.size(); ++i) { 

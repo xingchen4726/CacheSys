@@ -35,7 +35,7 @@ private:
     using NodePtr = std::shared_ptr<Node>;
     int freq_; // 访问频率
     NodePtr head_; // 假头结点
-    NodePtr tail_; // 假尾结点
+    NodePtr tail_; // 假尾结点   哨兵节点
 
 public:
     explicit FreqList(int n) 

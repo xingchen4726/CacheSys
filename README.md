@@ -1,5 +1,10 @@
 # KamaCache
 
+为了避免中文乱码问题，需要在终端将编码调整为utf-8
+输入
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; [Console]::InputEncoding = [System.Text.Encoding]::UTF8;
+
+
 > **本项目目前只在[知识星球](https://programmercarl.com/other/kstar.html)答疑并维护**。
 
 最近很多录友在问：有没有比较小，但又比较完整的项目。
